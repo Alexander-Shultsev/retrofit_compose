@@ -18,14 +18,31 @@ import java.lang.Exception
 
 class MainViewModel : ViewModel() {
 
-    // Товары в магазине
+    // Статья про работу с retrofit
+    // https://developer.android.com/codelabs/basic-android-kotlin-training-getting-data-internet#8
+
+    // Посты
     private val _posts: MutableLiveData<ArrayList<Post>> = MutableLiveData()
     val posts: LiveData<ArrayList<Post>> = _posts
 
     fun getPosts() {
         viewModelScope.launch {
-            try { _posts.value = service.getPost().body() }
+            try { _posts.value = service.getPosts().body() }
             catch (e: Exception) { Log.i(TAG, "getPost2: $e") }
+        }
+    }
+
+    // Выбранный пост
+    private val _post: MutableLiveData<Post> = MutableLiveData()
+    val post: LiveData<Post> = _post
+
+    fun getPost(idPost: String) {
+        viewModelScope.launch {
+            try {
+                _post.value = service.getPost(idPost).body()
+                Log.i("TAG", "success")
+            }
+            catch (e: Exception) { Log.i("TAG", "getPost ---- $e") }
         }
     }
 }
