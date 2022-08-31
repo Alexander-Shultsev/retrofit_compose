@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -39,13 +40,17 @@ fun Greeting(mainViewModel: MainViewModel = viewModel()) {
     mainViewModel.getPosts()
     val posts by mainViewModel.posts.observeAsState(ArrayList())
 
-    Column {
+    LazyColumn {
         for (elem in posts) {
-            Text(text = elem.id.toString())
-            Text(text = elem.userId.toString())
-            Text(text = elem.title)
-            Text(text = elem.body)
-            Spacer(modifier = Modifier.height(5.dp))
+            item {
+                Column {
+                    Text(text = elem.id.toString())
+                    Text(text = elem.userId.toString())
+                    Text(text = elem.title)
+                    Text(text = elem.body)
+                    Spacer(modifier = Modifier.height(5.dp))
+                }
+            }
         }
     }
 }

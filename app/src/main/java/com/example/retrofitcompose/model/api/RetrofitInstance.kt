@@ -23,6 +23,6 @@ class RetrofitInstance {
                 .build()
         }
 
-        val service: Query = retrofitInstance().create(Query::class.java)
+        val service: Query by lazy { retrofitInstance().create(Query::class.java) }
     }
 }
