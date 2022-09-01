@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.retrofitcompose.model.api.RetrofitInstance
 import com.example.retrofitcompose.model.api.RetrofitInstance.Companion.service
+import com.example.retrofitcompose.model.api.data.Photo
 import com.example.retrofitcompose.model.api.data.Post
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -45,4 +46,32 @@ class MainViewModel : ViewModel() {
             catch (e: Exception) { Log.i("TAG", "getPost ---- $e") }
         }
     }
+
+    // Список фотографий
+    private val _photos: MutableLiveData<ArrayList<Photo>> = MutableLiveData()
+    val photos: LiveData<ArrayList<Photo>> = _photos
+
+    fun getPhotos() {
+        viewModelScope.launch {
+            try {
+                _photos.value = service.getPhotos().body()
+                Log.i("TAG", "success")
+            }
+            catch (e: Exception) { Log.i("TAG", "getPost ---- $e") }
+        }
+    }
+
+    // Список пользователей
+//    private val _photos: MutableLiveData<ArrayList<Photo>> = MutableLiveData()
+//    val photos: LiveData<ArrayList<Photo>> = _photos
+//
+//    fun getPhotos() {
+//        viewModelScope.launch {
+//            try {
+//                _photos.value = service.getPhotos().body()
+//                Log.i("TAG", "success")
+//            }
+//            catch (e: Exception) { Log.i("TAG", "getPost ---- $e") }
+//        }
+//    }
 }

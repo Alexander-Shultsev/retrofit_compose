@@ -15,7 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.retrofitcompose.model.api.data.Photo
 import com.example.retrofitcompose.model.api.data.Post
+import com.example.retrofitcompose.ui.component.ImageView
 import com.example.retrofitcompose.ui.theme.RetrofitComposeTheme
 import com.example.retrofitcompose.view_model.MainViewModel
 import kotlin.math.abs
@@ -50,25 +52,47 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel()) {
                         Text(text = "Все посты")
                     }
                 }
-
                 item {
                     Button(onClick = { currentScreen = 1 }) {
                         Text(text = "Один пост")
+                    }
+                }
+                item {
+                    Button(onClick = { currentScreen = 2 }) {
+                        Text(text = "Изображения")
                     }
                 }
             }
         }
         item {
             when (currentScreen) {
-                0 -> getAllPost(mainViewModel)
-                1 -> getOnePost(mainViewModel)
+                0 -> GetAllPost(mainViewModel)
+                1 -> GetOnePost(mainViewModel)
+                2 -> GetImage(mainViewModel)
             }
         }
     }
 }
 
 @Composable
-fun getOnePost(mainViewModel: MainViewModel) {
+fun GetImage(mainViewModel: MainViewModel) {
+    mainViewModel.getPhotos()
+    val photos by mainViewModel.photos.observeAsState(ArrayList())
+
+    Column {
+        for (elem in photos) {
+            ImageView(
+                imageUrl = elem.url,
+                modifier = Modifier
+                    .size(100.dp))
+            Text(elem.title)
+            Spacer(modifier = Modifier.height(5.dp))
+        }
+    }
+}
+
+@Composable
+fun GetOnePost(mainViewModel: MainViewModel) {
     var numberPost by remember { mutableStateOf("1") }
     val post by mainViewModel.post.observeAsState(Post(0, 0, "", ""))
 
@@ -84,12 +108,6 @@ fun getOnePost(mainViewModel: MainViewModel) {
                 }
             }
         )
-//        Button(onClick = {
-//            mainViewModel.getPost(numberPost)
-//        }) {
-//            Text(text = "Найти")
-//        }
-
         Text(text = post.title)
         Text(text = post.body)
     }
@@ -97,7 +115,7 @@ fun getOnePost(mainViewModel: MainViewModel) {
 
 
 @Composable
-fun getAllPost(mainViewModel: MainViewModel) {
+fun GetAllPost(mainViewModel: MainViewModel) {
     mainViewModel.getPosts()
     val posts by mainViewModel.posts.observeAsState(ArrayList())
 
