@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(mainViewModel: MainViewModel = viewModel()) {
@@ -48,28 +49,129 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel()) {
         stickyHeader {
             LazyRow {
                 item {
-                    Button(onClick = { currentScreen = 0 }) {
+                    Button(onClick = { currentScreen = 1 }) {
                         Text(text = "Все посты")
                     }
                 }
                 item {
-                    Button(onClick = { currentScreen = 1 }) {
+                    Button(onClick = { currentScreen = 2 }) {
                         Text(text = "Один пост")
                     }
                 }
                 item {
-                    Button(onClick = { currentScreen = 2 }) {
+                    Button(onClick = { currentScreen = 3 }) {
                         Text(text = "Изображения")
+                    }
+                }
+                item {
+                    Button(onClick = { currentScreen = 4 }) {
+                        Text(text = "Пользователи")
+                    }
+                }
+                item {
+                    Button(onClick = { currentScreen = 5 }) {
+                        Text(text = "Все посты POST запрос")
+                    }
+                }
+                item {
+                    Button(onClick = { currentScreen = 6 }) {
+                        Text(text = "Обновление поста PUT")
+                    }
+                }
+                item {
+                    Button(onClick = { currentScreen = 7 }) {
+                        Text(text = "Обновление поста PATCH")
+                    }
+                }
+                item {
+                    Button(onClick = { currentScreen = 8 }) {
+                        Text(text = "Удаление поста")
                     }
                 }
             }
         }
         item {
             when (currentScreen) {
-                0 -> GetAllPost(mainViewModel)
-                1 -> GetOnePost(mainViewModel)
-                2 -> GetImage(mainViewModel)
+                1 -> GetAllPost(mainViewModel)
+                2 -> GetOnePost(mainViewModel)
+                3 -> GetImage(mainViewModel)
+                4 -> GetAllUsers(mainViewModel)
+                5 -> GetAllPost2(mainViewModel)
+                6 -> PutPost(mainViewModel)
+                7 -> PatchPost(mainViewModel)
+                8 -> DeletePost(mainViewModel)
             }
+        }
+    }
+}
+
+@Composable
+fun DeletePost(mainViewModel: MainViewModel) {
+    mainViewModel.deletePost("3")
+    val posts3 by mainViewModel.deletePosts.observeAsState("")
+
+    Column {
+        Text(text = "Status: $posts3")
+    }
+}
+
+@Composable
+fun PatchPost(mainViewModel: MainViewModel) {
+    mainViewModel.patchPost("3", "Day of brain")
+    val posts3 by mainViewModel.patchPost.observeAsState(Post(0, 0, "", ""))
+
+    Column {
+        Text(text = posts3.id.toString())
+        Text(text = posts3.userId.toString())
+        Text(text = posts3.title)
+        Text(text = posts3.body)
+    }
+}
+
+@Composable
+fun PutPost(mainViewModel: MainViewModel) {
+    mainViewModel.putPost("1", "1", "Day of brain", "wow holiday")
+    val posts3 by mainViewModel.putPosts.observeAsState(Post(0, 0, "", ""))
+
+    Column {
+        Text(text = posts3.id.toString())
+        Text(text = posts3.userId.toString())
+        Text(text = posts3.title)
+        Text(text = posts3.body)
+    }
+}
+
+@Composable
+fun GetAllPost2(mainViewModel: MainViewModel) {
+    mainViewModel.postPost("1", "Day of brain", "wow holiday")
+    val posts2 by mainViewModel.posts2.observeAsState(Post(0, 0, "", ""))
+
+    Column {
+        Text(text = posts2.id.toString())
+        Text(text = posts2.userId.toString())
+        Text(text = posts2.title)
+        Text(text = posts2.body)
+    }
+}
+
+@Composable
+fun GetAllUsers(mainViewModel: MainViewModel) {
+    mainViewModel.getUsers()
+    val users by mainViewModel.users.observeAsState(ArrayList())
+
+    Column {
+        for (elem in users) {
+            LazyRow {
+                item { Text(elem.address.city) }
+                item { Text(elem.address.street) }
+                item { Text(elem.address.street) }
+                item { Text(elem.address.suite) }
+            }
+            LazyRow {
+                item { Text(elem.company.name) }
+                item { Text(elem.company.catchPhrase) }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }

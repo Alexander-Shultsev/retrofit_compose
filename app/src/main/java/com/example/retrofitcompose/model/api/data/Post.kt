@@ -6,3 +6,9 @@ data class Post (
     val title: String,
     val body: String
 )
+
+data class Post2 (
+    val userId: String,
+    val title: String,
+    val body: String
+)
